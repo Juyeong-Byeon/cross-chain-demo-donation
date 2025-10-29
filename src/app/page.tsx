@@ -32,36 +32,7 @@ const DESTINATION_CHAIN = "xrpl-evm";
 const GAS_FEE_AMOUNT = "300000";
 const EXPLORER_URL = "https://explorer.testnet.xrplevm.org";
 
-const POOL_ABI = [
-  {
-    inputs: [{ internalType: "string", name: "", type: "string" }],
-    name: "donations",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    name: "donors",
-    outputs: [{ internalType: "string", name: "", type: "string" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getDonorCount",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalDonations",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-];
+const POOL_ABI = [];
 
 const hex = (str: string): string => Buffer.from(str).toString("hex");
 
@@ -232,15 +203,6 @@ export default function DonationPage() {
     }
   };
 
-  enum Command {
-    DONATE = 0,
-  }
-
-  const encodedPayload = () => {
-    const abiCoder = new ethers.AbiCoder();
-    return abiCoder.encode(["uint8"], [Command.DONATE]).replace("0x", "");
-  };
-
   const sendDonation = async () => {
     if (!wallet || !account || !donationAmount) return;
 
@@ -253,56 +215,19 @@ export default function DonationPage() {
         Number.parseFloat(amountInDrops) + Number.parseFloat(GAS_FEE_AMOUNT)
       ).toString();
 
-      const payment = await wallet.requestPayment({
-        TransactionType: "Payment",
-        Amount: totalAmount,
-        Destination: AXELAR_MULTISIG,
-        Account: account,
-        Memos: [
-          {
-            Memo: {
-              MemoType: hex("payload"),
-              MemoData: encodedPayload(),
-            },
-          },
-          {
-            Memo: {
-              MemoType: hex("type"),
-              MemoData: hex("interchain_transfer"),
-            },
-          },
-          {
-            Memo: {
-              MemoType: hex("destination_chain"),
-              MemoData: hex(DESTINATION_CHAIN),
-            },
-          },
-          {
-            Memo: {
-              MemoType: hex("destination_address"),
-              MemoData: hex(POOL_ADDRESS.replace("0x", "")),
-            },
-          },
-          {
-            Memo: {
-              MemoType: hex("gas_fee_amount"),
-              MemoData: hex(GAS_FEE_AMOUNT),
-            },
-          },
-        ],
-      });
-
-      if (payment) {
-        setTxHash(payment);
-        setShowTxModal(true);
-        toast.success("Donation Sent!", {
-          description: `Transaction submitted successfully`,
-        });
-        setDonationAmount("");
-        setTimeout(() => {
-          fetchDonationData();
-        }, 5000);
-      }
+      // TODO: add the payment request here
+      // const payment = await wallet.requestPayment({ });
+      // if (payment) {
+      //   setTxHash(payment);
+      //   setShowTxModal(true);
+      //   toast.success("Donation Sent!", {
+      //     description: `Transaction submitted successfully`,
+      //   });
+      //   setDonationAmount("");
+      //   setTimeout(() => {
+      //     fetchDonationData();
+      //   }, 5000);
+      // }
     } catch (error) {
       console.error("Error sending donation:", error);
       toast.error("Transaction Failed", {
