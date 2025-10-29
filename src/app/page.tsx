@@ -26,7 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const POOL_ADDRESS = "0x1a3c049f6c4b930a4568d2bfa260cfce2b98cc2e";
+const POOL_ADDRESS = "0x3d0d600385af49e9db119eb76b4327592c91f277";
 const AXELAR_MULTISIG = "rNrjh1KGZk2jBR3wPfAQnoidtFFYQKbQn2";
 const DESTINATION_CHAIN = "xrpl-evm";
 const GAS_FEE_AMOUNT = "300000";
